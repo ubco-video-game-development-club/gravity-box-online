@@ -25,6 +25,9 @@ public class Player : MonoBehaviourPun, IPunObservable
     private new Rigidbody2D rigidbody2D;
     private YieldInstruction invincibilityFrameInstruction;
 
+	private Vector2 realPosition;
+	private float realRotation;
+
     void Awake()
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
@@ -35,6 +38,13 @@ public class Player : MonoBehaviourPun, IPunObservable
 	void Start()
 	{
 		rocketLauncher.enabled = photonView.IsMine;
+	}
+
+	void FixedUpdate()
+	{
+		if(photonView.IsMine) return;
+		rigidbody2D.position = Vector2.Lerp(rigidbody2D.position, realPosition, Time.deltaTime);
+		transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, realRotation), Time.deltaTime);
 	}
 
     public void TakeDamage(int damage)
@@ -112,11 +122,12 @@ public class Player : MonoBehaviourPun, IPunObservable
 		{
 			stream.SendNext(rigidbody2D.position);
 			stream.SendNext(rigidbody2D.rotation);
+			Debug.Log(rigidbody2D.rotation);
 			stream.SendNext(rigidbody2D.velocity);
 		} else 
 		{
-			rigidbody2D.position = (Vector2)stream.ReceiveNext();
-			rigidbody2D.rotation = (float)stream.ReceiveNext();
+			realPosition = (Vector2)stream.ReceiveNext();
+			realRotation = (float)stream.ReceiveNext();
 			rigidbody2D.velocity = (Vector2)stream.ReceiveNext();
 		}
 	}
