@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Photon.Pun;
 
 public class Player : MonoBehaviour
 {
@@ -16,9 +17,11 @@ public class Player : MonoBehaviour
     [SerializeField] private OnHealthChangedEvent onHealthChanged = new OnHealthChangedEvent();
     [SerializeField] private OnDeathEvent onDeath = new OnDeathEvent();
     [SerializeField] private SpriteRenderer[] flickerRenderers;
+	[SerializeField] private RocketLauncher rocketLauncher;
 
     private int currentHealth = 0;
     private bool isInvincible = false;
+	private PhotonView photonView;
 
     private new Rigidbody2D rigidbody2D;
     private YieldInstruction invincibilityFrameInstruction;
@@ -26,9 +29,15 @@ public class Player : MonoBehaviour
     void Awake()
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
+		photonView = GetComponent<PhotonView>();
         invincibilityFrameInstruction = new WaitForSeconds(invincibilityFrame / (float)numFlickers);
         currentHealth = maxHealth;
     }
+
+	void Start()
+	{
+		rocketLauncher.enabled = photonView.IsMine;
+	}
 
     public void TakeDamage(int damage)
     {

@@ -398,6 +398,7 @@ MonoBehaviour:
   flickerRenderers:
   - {fileID: 4266499463527344603}
   - {fileID: 4266499463436610484}
+  rocketLauncher: {fileID: 4266499463436610485}
 --- !u!114 &4266499463527344609
 MonoBehaviour:
   m_ObjectHideFlags: 0
