@@ -121,7 +121,7 @@ public class Player : MonoBehaviourPun, IPunObservable
 		if(stream.IsWriting)
 		{
 			stream.SendNext(rigidbody2D.position);
-			stream.SendNext(rocketLauncher.rotation.z);
+			stream.SendNext(rocketLauncher.transform.rotation.z);
 		} else 
 		{
 			realPosition = (Vector2)stream.ReceiveNext();

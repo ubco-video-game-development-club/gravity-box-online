@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Photon.Pun;
 
 public class RocketLauncher : MonoBehaviour
 {
@@ -38,7 +39,7 @@ public class RocketLauncher : MonoBehaviour
             StartCoroutine(RocketCooldown());
 
             // Spawn rocket
-            Rocket rocket = Instantiate(rocketPrefab, transform.position, Quaternion.identity);
+			Rocket rocket = PhotonNetwork.Instantiate("Rocket", transform.position, Quaternion.identity, 0).GetComponent<Rocket>();
             rocket.Direction = mouseDir;
 
             // Apply recoil force to player
