@@ -47,8 +47,13 @@ public class Player : MonoBehaviourPun, IPunObservable
 		rocketLauncher.transform.rotation = Quaternion.Slerp(rocketLauncher.transform.rotation, Quaternion.Euler(0, 0, realRotation), Time.deltaTime);
 	}
 
-    public void TakeDamage(int damage)
+	[PunRPC]
+    public void TakeDamage(int damage, Vector2 explosionForce)
     {
+		rigidbody2D.AddForce(explosionForce, ForceMode2D.Impulse);
+
+		if(!photonView.IsMine) return;
+
         //If invincible or dead, don't take damage
         if (isInvincible || currentHealth <= 0)
         {
@@ -66,6 +71,23 @@ public class Player : MonoBehaviourPun, IPunObservable
 
         onHealthChanged.Invoke(currentHealth);
     }
+
+	public void Explode(bool directHit, Player hitPlayer, Vector3 position, float radius, float minDamage, float maxDamage, Vector2 explosionForce)
+	{
+		if (directHit && this == hitPlayer)
+        {
+            // Apply full damage
+            photonView.RPC("TakeDamage", RpcTarget.All, Mathf.RoundToInt(maxDamage), explosionForce);
+        }
+        else
+        {
+            // Damage based on distance
+            float dist = Vector2.Distance(transform.position, position);
+            float damageScale = 1.0f - Mathf.Clamp(dist / radius, 0f, 1f);
+            float damage = Mathf.Lerp(minDamage, maxDamage, damageScale);
+            photonView.RPC("TakeDamage", RpcTarget.All, Mathf.RoundToInt(damage), explosionForce);
+        }
+	}
 
     private IEnumerator InvincibilityFrame()
     {

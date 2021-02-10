@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class Rocket : MonoBehaviour
+public class Rocket : MonoBehaviourPun
 {
     [SerializeField] private GameObject explosionEffectPrefab;
     [SerializeField] private GameObject explosionTextPrefab;
@@ -11,6 +12,8 @@ public class Rocket : MonoBehaviour
     [SerializeField] private float explosionRadius = 1;
     [SerializeField] private float minDamage = 3.0f;
     [SerializeField] private float maxDamage = 10.0f;
+
+	public bool IsLocal { get; set; }
 
     public Vector2 Direction
     {
@@ -30,56 +33,52 @@ public class Rocket : MonoBehaviour
         rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
+	[PunRPC]
+	public void Explode()
+	{
+		// Spawn explosion effect
+        Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);
+        Instantiate(explosionTextPrefab, transform.position, Quaternion.identity, HUD.Singleton.ExplosionTextParent);
+	}
+
     private void ApplyVelocity(Vector2 velocity)
     {
+		if(!IsLocal) return;
         transform.rotation = Quaternion.FromToRotation(Vector2.right, velocity);
         rigidbody2D.velocity = velocity;
     }
 
     void OnTriggerEnter2D(Collider2D col)
     {
+		if(!IsLocal) return;
+
         // Get enemy hit if we did direct hit
-        Enemy hitEnemy;
-        bool didDirectHit = col.TryGetComponent<Enemy>(out hitEnemy);
+        Player hitPlayer;
+        bool didDirectHit = col.TryGetComponent<Player>(out hitPlayer);
 
         // Apply explosion to all targets within range
         Vector3 explosionPos = transform.position;
         Collider2D[] targets = Physics2D.OverlapCircleAll(explosionPos, explosionRadius);
         foreach (Collider2D target in targets)
         {
-            if (target.TryGetComponent<Rigidbody2D>(out Rigidbody2D targetBody))
-            {
-                Vector2 forceOffset = targetBody.transform.position - explosionPos;
+			if(target.TryGetComponent<Player>(out Player player))
+			{
+				Vector2 forceOffset = player.transform.position - explosionPos;
                 Vector2 forceDir = forceOffset.normalized;
                 float forceDist = forceOffset.magnitude;
                 float forceScale = 1 - Mathf.Clamp(forceDist / explosionRadius, 0f, 1f);
-                targetBody.AddForce(explosionStrength * forceDir * forceScale, ForceMode2D.Impulse);
-            }
+                Vector2 explosionForce = explosionStrength * forceDir * forceScale;
 
-            if (target.TryGetComponent<Enemy>(out Enemy enemy))
-            {
-                // Check if we direct hit this enemy
-                if (didDirectHit && enemy == hitEnemy)
-                {
-                    // Apply full damage
-                    enemy.TakeDamage(maxDamage);
-                }
-                else
-                {
-                    // Damage based on distance
-                    float enemyDist = Vector2.Distance(enemy.transform.position, transform.position);
-                    float damageScale = 1 - Mathf.Clamp(enemyDist / explosionRadius, 0f, 1f);
-                    float damage = Mathf.Lerp(minDamage, maxDamage, damageScale);
-                    enemy.TakeDamage(damage);
-                }
-            }
+				if(player.photonView.IsMine)
+				{
+					player.GetComponent<Rigidbody2D>().AddForce(explosionForce, ForceMode2D.Impulse);	
+				} else player.Explode(didDirectHit, hitPlayer, transform.position, explosionRadius, minDamage, maxDamage, explosionForce);
+			}
         }
 
-        // Spawn explosion effect
-        Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);
-        Instantiate(explosionTextPrefab, transform.position, Quaternion.identity, HUD.Singleton.ExplosionTextParent);
+        photonView.RPC("Explode", RpcTarget.All);
 
-        // Self destruct
-        Destroy(gameObject);
+		// Self destruct
+       	PhotonNetwork.Destroy(photonView);
     }
 }

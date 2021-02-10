@@ -39,8 +39,9 @@ public class RocketLauncher : MonoBehaviour
             StartCoroutine(RocketCooldown());
 
             // Spawn rocket
-			Rocket rocket = PhotonNetwork.Instantiate("Rocket", transform.position, Quaternion.identity, 0).GetComponent<Rocket>();
-            rocket.Direction = mouseDir;
+			Rocket rocket = PhotonNetwork.Instantiate("Rocket", transform.position, Quaternion.FromToRotation(Vector2.right, mouseDir), 0).GetComponent<Rocket>();
+            rocket.IsLocal = true;
+			rocket.Direction = mouseDir;
 
             // Apply recoil force to player
             playerBody.AddForce(recoilStrength * -mouseDir, ForceMode2D.Impulse);

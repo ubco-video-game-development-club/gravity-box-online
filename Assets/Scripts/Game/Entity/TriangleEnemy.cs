@@ -43,7 +43,7 @@ public class TriangleEnemy : Enemy
     {
         if(col.transform.TryGetComponent<Player>(out Player player))
         {
-            player.TakeDamage(damage);
+            player.TakeDamage(damage, Vector2.zero);
         }
     }
 
