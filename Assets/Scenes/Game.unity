@@ -697,6 +697,7 @@ GameObject:
   m_Component:
   - component: {fileID: 184463644}
   - component: {fileID: 184463645}
+  - component: {fileID: 184463649}
   - component: {fileID: 184463646}
   - component: {fileID: 184463647}
   - component: {fileID: 184463648}
@@ -890,6 +891,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &184463649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 184463643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ff15fdb1cf6bb04aab759a0e5baf363, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &192704638
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4439,6 +4452,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
 --- !u!223 &2140919726
 Canvas:
   m_ObjectHideFlags: 0
@@ -4586,7 +4600,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2140919723}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 86710e43de46f6f4bac7c8e50813a599, type: 3}
   m_Name: 

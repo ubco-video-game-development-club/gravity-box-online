@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Audio;
+using Photon.Pun;
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -29,14 +30,12 @@ public class MainMenuManager : MonoBehaviour
 
     void Start()
     {
-
         SetVolumeSliders();
         SetLeaderboardName();
     }
 
     public void OnPlayButtonClicked()
     {
-        //TODO: Load the scene in a more elegant way (?)
         SceneManager.LoadScene(playScene);
     }
 
@@ -68,7 +67,7 @@ public class MainMenuManager : MonoBehaviour
     {
         Leaderboard.username = value;
         PlayerPrefs.SetString(LEADERBOARD_NAME_PREF, value);
-    }
+	}
 
     private void SetLeaderboardName()
     {
