@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using Photon.Pun;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviourPun, IPunObservable
 {
     [System.Serializable] public class OnHealthChangedEvent : UnityEvent<int> { }
     [System.Serializable] public class OnDeathEvent : UnityEvent { }
@@ -21,7 +21,6 @@ public class Player : MonoBehaviour
 
     private int currentHealth = 0;
     private bool isInvincible = false;
-	private PhotonView photonView;
 
     private new Rigidbody2D rigidbody2D;
     private YieldInstruction invincibilityFrameInstruction;
@@ -29,7 +28,6 @@ public class Player : MonoBehaviour
     void Awake()
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
-		photonView = GetComponent<PhotonView>();
         invincibilityFrameInstruction = new WaitForSeconds(invincibilityFrame / (float)numFlickers);
         currentHealth = maxHealth;
     }
@@ -107,4 +105,19 @@ public class Player : MonoBehaviour
     {
         onDeath.RemoveListener(call);
     }
+
+	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+	{
+		if(stream.IsWriting)
+		{
+			stream.SendNext(rigidbody2D.position);
+			stream.SendNext(rigidbody2D.rotation);
+			stream.SendNext(rigidbody2D.velocity);
+		} else 
+		{
+			rigidbody2D.position = (Vector2)stream.ReceiveNext();
+			rigidbody2D.rotation = (float)stream.ReceiveNext();
+			rigidbody2D.velocity = (Vector2)stream.ReceiveNext();
+		}
+	}
 }
