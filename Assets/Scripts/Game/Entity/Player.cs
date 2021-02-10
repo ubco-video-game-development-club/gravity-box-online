@@ -44,7 +44,7 @@ public class Player : MonoBehaviourPun, IPunObservable
 	{
 		if(photonView.IsMine) return;
 		rigidbody2D.position = Vector2.Lerp(rigidbody2D.position, realPosition, Time.deltaTime);
-		transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, realRotation), Time.deltaTime);
+		rocketLauncher.transform.rotation = Quaternion.Slerp(rocketLauncher.transform.rotation, Quaternion.Euler(0, 0, realRotation), Time.deltaTime);
 	}
 
     public void TakeDamage(int damage)
@@ -121,14 +121,11 @@ public class Player : MonoBehaviourPun, IPunObservable
 		if(stream.IsWriting)
 		{
 			stream.SendNext(rigidbody2D.position);
-			stream.SendNext(rigidbody2D.rotation);
-			Debug.Log(rigidbody2D.rotation);
-			stream.SendNext(rigidbody2D.velocity);
+			stream.SendNext(rocketLauncher.rotation.z);
 		} else 
 		{
 			realPosition = (Vector2)stream.ReceiveNext();
 			realRotation = (float)stream.ReceiveNext();
-			rigidbody2D.velocity = (Vector2)stream.ReceiveNext();
 		}
 	}
 }
