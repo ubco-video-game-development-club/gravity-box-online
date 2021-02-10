@@ -17,7 +17,7 @@ public class HeartDisplay : MonoBehaviour
         hearts = new List<Image>();
     }
 
-    void Start()
+    void OnEnable()
     {
         Player player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         player.AddHealthChangedListener(UpdateHeartDisplay);

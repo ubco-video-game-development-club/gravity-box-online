@@ -9,6 +9,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 	public const string GAME_VERSION = "0.1";
 
 	[SerializeField] private byte maxPlayers = 4;
+	[SerializeField] private Transform[] playerSpawns;
 
 	void Start() 
 	{
@@ -37,7 +38,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
 	public override void OnJoinedRoom()
 	{
-		Debug.Log("Joined Room!");
+		SpawnLocalPlayer(0);
+	}
+
+	private void SpawnLocalPlayer(int spawnPoint)
+	{
+		PhotonNetwork.Instantiate("Player", playerSpawns[spawnPoint].position, Quaternion.identity, 0);
 	}
 
 	private void Connect() 
