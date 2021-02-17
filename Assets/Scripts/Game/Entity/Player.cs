@@ -6,6 +6,8 @@ using Photon.Pun;
 
 public class Player : MonoBehaviourPun, IPunObservable
 {
+    public const int PLAYER_LAYER = 9;
+
     [System.Serializable] public class OnHealthChangedEvent : UnityEvent<int> { }
     [System.Serializable] public class OnDeathEvent : UnityEvent { }
 
@@ -40,6 +42,10 @@ public class Player : MonoBehaviourPun, IPunObservable
     void Start()
     {
         rocketLauncher.enabled = photonView.IsMine;
+        if(photonView.IsMine)
+        {
+            gameObject.layer = PLAYER_LAYER;
+        }
     }
 
     void FixedUpdate()
