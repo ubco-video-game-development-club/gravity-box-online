@@ -62,6 +62,8 @@ public class Player : MonoBehaviourPun, IPunObservable
     {
         rigidbody2D.AddForce(explosionForce, ForceMode2D.Impulse);
 
+        StartCoroutine(InvincibilityFrame());
+
         if (!photonView.IsMine) return;
 
         //If invincible or dead, don't take damage
@@ -76,8 +78,6 @@ public class Player : MonoBehaviourPun, IPunObservable
             enabled = false;
             onDeath.Invoke();
         }
-
-        StartCoroutine(InvincibilityFrame());
 
         onHealthChanged.Invoke(currentHealth);
     }
