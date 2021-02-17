@@ -144,17 +144,6 @@ public class Player : MonoBehaviourPun, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        // if(stream.IsWriting)
-        // {
-        // 	stream.SendNext(rigidbody2D.position);
-        // 	stream.SendNext(rocketLauncher.transform.eulerAngles.z);
-        // } else 
-        // {
-        // 	realPosition = (Vector2)stream.ReceiveNext();
-        // 	realRotation = (float)stream.ReceiveNext();
-        // }
-
-
         if (stream.IsWriting)
         {
             stream.SendNext(rigidbody2D.position);
