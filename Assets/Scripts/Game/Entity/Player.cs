@@ -17,7 +17,7 @@ public class Player : MonoBehaviourPun, IPunObservable
     [SerializeField] private OnHealthChangedEvent onHealthChanged = new OnHealthChangedEvent();
     [SerializeField] private OnDeathEvent onDeath = new OnDeathEvent();
     [SerializeField] private SpriteRenderer[] flickerRenderers;
-	[SerializeField] private RocketLauncher rocketLauncher;
+    [SerializeField] private RocketLauncher rocketLauncher;
 
     private int currentHealth = 0;
     private bool isInvincible = false;
@@ -25,8 +25,10 @@ public class Player : MonoBehaviourPun, IPunObservable
     private new Rigidbody2D rigidbody2D;
     private YieldInstruction invincibilityFrameInstruction;
 
-	private Vector2 realPosition;
-	private float realRotation;
+    private Vector2 realPosition;
+    private float realRotation;
+    private float lagDistance;
+    private float lagAngle;
 
     void Awake()
     {
@@ -35,24 +37,25 @@ public class Player : MonoBehaviourPun, IPunObservable
         currentHealth = maxHealth;
     }
 
-	void Start()
-	{
-		rocketLauncher.enabled = photonView.IsMine;
-	}
+    void Start()
+    {
+        rocketLauncher.enabled = photonView.IsMine;
+    }
 
-	void FixedUpdate()
-	{
-		if(photonView.IsMine) return;
-		rigidbody2D.position = Vector2.Lerp(rigidbody2D.position, realPosition, Time.deltaTime);
-		rocketLauncher.transform.rotation = Quaternion.Slerp(rocketLauncher.transform.rotation, Quaternion.Euler(0, 0, realRotation), Time.deltaTime);
-	}
+    void FixedUpdate()
+    {
+        if (photonView.IsMine) return;
+        rigidbody2D.position = Vector2.MoveTowards(rigidbody2D.position, realPosition, lagDistance * (1.0f / PhotonNetwork.SerializationRate));
+        float rot = Mathf.MoveTowards(rocketLauncher.transform.eulerAngles.z, realRotation, lagAngle * (1.0f / PhotonNetwork.SerializationRate));
+        Quaternion toRot = Quaternion.Euler(0, 0, rot);
+    }
 
-	[PunRPC]
+    [PunRPC]
     public void TakeDamage(int damage, Vector2 explosionForce)
     {
-		rigidbody2D.AddForce(explosionForce, ForceMode2D.Impulse);
+        rigidbody2D.AddForce(explosionForce, ForceMode2D.Impulse);
 
-		if(!photonView.IsMine) return;
+        if (!photonView.IsMine) return;
 
         //If invincible or dead, don't take damage
         if (isInvincible || currentHealth <= 0)
@@ -72,9 +75,9 @@ public class Player : MonoBehaviourPun, IPunObservable
         onHealthChanged.Invoke(currentHealth);
     }
 
-	public void Explode(bool directHit, Player hitPlayer, Vector3 position, float radius, float minDamage, float maxDamage, Vector2 explosionForce)
-	{
-		if (directHit && this == hitPlayer)
+    public void Explode(bool directHit, Player hitPlayer, Vector3 position, float radius, float minDamage, float maxDamage, Vector2 explosionForce)
+    {
+        if (directHit && this == hitPlayer)
         {
             // Apply full damage
             photonView.RPC("TakeDamage", RpcTarget.All, Mathf.RoundToInt(maxDamage), explosionForce);
@@ -87,16 +90,16 @@ public class Player : MonoBehaviourPun, IPunObservable
             float damage = Mathf.Lerp(minDamage, maxDamage, damageScale);
             photonView.RPC("TakeDamage", RpcTarget.All, Mathf.RoundToInt(damage), explosionForce);
         }
-	}
+    }
 
     private IEnumerator InvincibilityFrame()
     {
         isInvincible = true;
 
-        for(int i = 0; i < numFlickers; i++)
+        for (int i = 0; i < numFlickers; i++)
         {
             yield return invincibilityFrameInstruction;
-            foreach(SpriteRenderer r in flickerRenderers)
+            foreach (SpriteRenderer r in flickerRenderers)
             {
                 r.enabled = !r.enabled;
             }
@@ -107,9 +110,9 @@ public class Player : MonoBehaviourPun, IPunObservable
         //This is to ensure that the renderer is always enabled at the end of this function
         //The wait time is so the flicker won't look weird
         yield return invincibilityFrameInstruction;
-        foreach(SpriteRenderer r in flickerRenderers)
+        foreach (SpriteRenderer r in flickerRenderers)
         {
-                r.enabled = true;
+            r.enabled = true;
         }
     }
 
@@ -118,36 +121,55 @@ public class Player : MonoBehaviourPun, IPunObservable
         rigidbody2D.AddForce(knockbackForce);
     }
 
-    public void AddHealthChangedListener(UnityAction<int> call) 
+    public void AddHealthChangedListener(UnityAction<int> call)
     {
         onHealthChanged.AddListener(call);
     }
 
-    public void RemoveHealthChangedListener(UnityAction<int> call) 
+    public void RemoveHealthChangedListener(UnityAction<int> call)
     {
         onHealthChanged.RemoveListener(call);
     }
 
-    public void AddDeathListener(UnityAction call) 
+    public void AddDeathListener(UnityAction call)
     {
         onDeath.AddListener(call);
     }
 
-    public void RemoveDeathListener(UnityAction call) 
+    public void RemoveDeathListener(UnityAction call)
     {
         onDeath.RemoveListener(call);
     }
 
-	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-	{
-		if(stream.IsWriting)
-		{
-			stream.SendNext(rigidbody2D.position);
-			stream.SendNext(rocketLauncher.transform.rotation.z);
-		} else 
-		{
-			realPosition = (Vector2)stream.ReceiveNext();
-			realRotation = (float)stream.ReceiveNext();
-		}
-	}
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        // if(stream.IsWriting)
+        // {
+        // 	stream.SendNext(rigidbody2D.position);
+        // 	stream.SendNext(rocketLauncher.transform.eulerAngles.z);
+        // } else 
+        // {
+        // 	realPosition = (Vector2)stream.ReceiveNext();
+        // 	realRotation = (float)stream.ReceiveNext();
+        // }
+
+
+        if (stream.IsWriting)
+        {
+            stream.SendNext(rigidbody2D.position);
+            stream.SendNext(rocketLauncher.transform.eulerAngles.z);
+            stream.SendNext(rigidbody2D.velocity);
+        }
+        else
+        {
+            realPosition = (Vector2)stream.ReceiveNext();
+            realRotation = (float)stream.ReceiveNext();
+            rigidbody2D.velocity = (Vector2)stream.ReceiveNext();
+
+            float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
+            realPosition += rigidbody2D.velocity * lag;
+            lagDistance = Vector2.Distance(rigidbody2D.position, realPosition);
+            lagAngle = Mathf.Abs(rocketLauncher.transform.eulerAngles.z - realRotation);
+        }
+    }
 }
