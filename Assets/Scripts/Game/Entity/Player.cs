@@ -28,7 +28,7 @@ public class Player : MonoBehaviourPun, IPunObservable
     private Vector2 realPosition;
     private float realRotation;
     private float lagDistance;
-    private float lagAngle;
+    private float angleSlerp;
 
     void Awake()
     {
@@ -46,8 +46,9 @@ public class Player : MonoBehaviourPun, IPunObservable
     {
         if (photonView.IsMine) return;
         rigidbody2D.position = Vector2.MoveTowards(rigidbody2D.position, realPosition, lagDistance * (1.0f / PhotonNetwork.SerializationRate));
-        float rot = Mathf.MoveTowards(rocketLauncher.transform.eulerAngles.z, realRotation, lagAngle * (1.0f / PhotonNetwork.SerializationRate));
-        Quaternion toRot = Quaternion.Euler(0, 0, rot);
+        
+        angleSlerp += 1.0f / PhotonNetwork.SerializationRate;
+        rocketLauncher.transform.rotation = Quaternion.Slerp(rocketLauncher.transform.rotation, Quaternion.Euler(0, 0, realRotation), angleSlerp);
     }
 
     [PunRPC]
@@ -169,7 +170,7 @@ public class Player : MonoBehaviourPun, IPunObservable
             float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
             realPosition += rigidbody2D.velocity * lag;
             lagDistance = Vector2.Distance(rigidbody2D.position, realPosition);
-            lagAngle = Mathf.Abs(rocketLauncher.transform.eulerAngles.z - realRotation);
+            angleSlerp = 0.0f;
         }
     }
 }
