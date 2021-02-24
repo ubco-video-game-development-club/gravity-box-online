@@ -4,15 +4,21 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
     public const string GAME_VERSION = "0.1";
 
-    public UnityEvent OnConnected { get { return onConnected; } }
+    public UnityEvent OnConnectedEvent { get { return onConnected; } }
 
     [SerializeField] private byte maxPlayers = 4;
     [SerializeField] private UnityEvent onConnected;
+
+    void Awake()
+    {
+        DontDestroyOnLoad(this);
+    }
 
     void Start()
     {
@@ -47,7 +53,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        SpawnLocalPlayer(0);
+        StartCoroutine(LoadGameAndSpawn());
     }
 
     private void SpawnLocalPlayer(int spawnPoint)
@@ -68,5 +74,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.AutomaticallySyncScene = false; //We don't want to do this because of main menus and stuff
         PhotonNetwork.ConnectUsingSettings();
         PhotonNetwork.GameVersion = GAME_VERSION;
+    }
+
+    private IEnumerator LoadGameAndSpawn()
+    {
+        AsyncOperation load = SceneManager.LoadSceneAsync("Game");
+        yield return new WaitUntil(() => load.isDone);
+        SpawnLocalPlayer(0); //TODO: Round-robin spawning
     }
 }
