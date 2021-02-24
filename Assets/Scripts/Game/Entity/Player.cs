@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using Photon.Pun;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviourPun, IPunObservable
 {
@@ -37,6 +38,9 @@ public class Player : MonoBehaviourPun, IPunObservable
         rigidbody2D = GetComponent<Rigidbody2D>();
         invincibilityFrameInstruction = new WaitForSeconds(invincibilityFrame / (float)numFlickers);
         currentHealth = maxHealth;
+
+        DontDestroyOnLoad(gameObject);
+        SceneManager.activeSceneChanged += OnActiveSceneChanged;
     }
 
     void Start()
@@ -96,6 +100,15 @@ public class Player : MonoBehaviourPun, IPunObservable
             float damageScale = 1.0f - Mathf.Clamp(dist / radius, 0f, 1f);
             float damage = Mathf.Lerp(minDamage, maxDamage, damageScale);
             photonView.RPC("TakeDamage", RpcTarget.All, Mathf.RoundToInt(damage), explosionForce);
+        }
+    }
+
+    private void OnActiveSceneChanged(Scene current, Scene next)
+    {
+        if(next.name != "Game") //If we're not loading the game scene,
+        {
+            //Destroy
+            Destroy(gameObject);
         }
     }
 
