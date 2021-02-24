@@ -12,11 +12,11 @@ public class CameraFollow : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (isFollowing)
+        if (isFollowing && target != null)
         {
             Vector2 targetPos = Vector2.SmoothDamp(transform.position, target.position, ref currentVelocity, dampTime);
             transform.position = new Vector3(targetPos.x, targetPos.y, transform.position.z);
-        }
+        } else if(target == null) isFollowing = false;
     }
 
     public void FollowTarget(Transform target)

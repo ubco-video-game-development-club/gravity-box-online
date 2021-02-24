@@ -13,6 +13,10 @@ public class HUD : MonoBehaviour
     public RectTransform ExplosionTextParent { get { return explosionTextParent; } }
     [SerializeField] private RectTransform explosionTextParent;
 
+    public Slider HPSlider { get { return hpSlider; } }
+    [SerializeField] private Slider hpSlider;
+    private int playerMaxHealth;
+
     void Awake()
     {
         if (Singleton != null)
@@ -21,5 +25,17 @@ public class HUD : MonoBehaviour
             return;
         }
         Singleton = this;
+    }
+
+    public void OnHealthChanged(int value)
+    {
+        float percent = (float)value / (float)playerMaxHealth;
+        hpSlider.value = percent;
+    }
+
+    public void SetPlayer(Player player)
+    {
+        playerMaxHealth = player.MaxHealth;
+        player.AddHealthChangedListener(OnHealthChanged);
     }
 }

@@ -350,7 +350,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e75aebed68985e84c9400b2a7ffa20d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 5
+  maxHealth: 25
   invincibilityFrame: 0.5
   numFlickers: 15
   onHealthChanged:

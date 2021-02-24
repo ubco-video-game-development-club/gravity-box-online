@@ -27,6 +27,7 @@ public class Player : MonoBehaviourPun, IPunObservable
 
     private new Rigidbody2D rigidbody2D;
     private YieldInstruction invincibilityFrameInstruction;
+    private YieldInstruction waitForEndOfFrame;
 
     private Vector2 realPosition;
     private float realRotation;
@@ -37,6 +38,7 @@ public class Player : MonoBehaviourPun, IPunObservable
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
         invincibilityFrameInstruction = new WaitForSeconds(invincibilityFrame / (float)numFlickers);
+        waitForEndOfFrame = new WaitForEndOfFrame();
         currentHealth = maxHealth;
 
         DontDestroyOnLoad(gameObject);
@@ -49,6 +51,7 @@ public class Player : MonoBehaviourPun, IPunObservable
         if(photonView.IsMine)
         {
             gameObject.layer = PLAYER_LAYER;
+            FindObjectOfType<HUD>().SetPlayer(this);
         }
     }
 
@@ -81,6 +84,7 @@ public class Player : MonoBehaviourPun, IPunObservable
         {
             enabled = false;
             onDeath.Invoke();
+            PhotonNetwork.Destroy(photonView);
         }
 
         onHealthChanged.Invoke(currentHealth);
@@ -114,6 +118,8 @@ public class Player : MonoBehaviourPun, IPunObservable
 
     private IEnumerator InvincibilityFrame()
     {
+        yield return waitForEndOfFrame;
+
         isInvincible = true;
 
         for (int i = 0; i < numFlickers; i++)
