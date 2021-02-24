@@ -27,6 +27,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private Slider sfxVolumeSlider;
     [SerializeField] private Slider uiVolumeSlider;
     [SerializeField] private TMPro.TMP_InputField leaderboardNameInput;
+    [SerializeField] private TMPro.TMP_InputField gameCodeInput;
 
     void Start()
     {
@@ -37,6 +38,17 @@ public class MainMenuManager : MonoBehaviour
     public void OnPlayButtonClicked()
     {
         SceneManager.LoadScene(playScene);
+    }
+
+    public void OnJoinButtonClicked()
+    {
+        string roomName = gameCodeInput.text;
+        PhotonNetwork.JoinRoom(roomName);
+    }
+
+    public void OnJoinRandomButtonClicked()
+    {
+        PhotonNetwork.JoinRandomRoom();
     }
 
     public void OnMasterVolumeSliderChanged(float value)
