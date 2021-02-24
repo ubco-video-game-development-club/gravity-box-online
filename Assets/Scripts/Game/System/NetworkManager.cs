@@ -11,9 +11,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public const string GAME_VERSION = "0.1";
 
     public UnityEvent OnConnectedEvent { get { return onConnected; } }
+    public UnityEvent OnJoinRoomFailedEvent { get { return onJoinRoomFailed; } }
 
     [SerializeField] private byte maxPlayers = 4;
     [SerializeField] private UnityEvent onConnected;
+    [SerializeField] private UnityEvent onJoinRoomFailed;
 
     void Awake()
     {
@@ -41,7 +43,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
-        Debug.LogError($"Failed to join room: {message}::{returnCode}");
+        Debug.LogWarning($"Failed to join room: {message}::{returnCode}");
+        onJoinRoomFailed.Invoke();
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
