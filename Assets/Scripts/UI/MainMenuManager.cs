@@ -27,6 +27,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private Slider sfxVolumeSlider;
     [SerializeField] private Slider uiVolumeSlider;
     [SerializeField] private TMPro.TMP_InputField leaderboardNameInput;
+    [SerializeField] private TMPro.TMP_InputField gameCodeInput;
 
     void Start()
     {
@@ -37,6 +38,16 @@ public class MainMenuManager : MonoBehaviour
     public void OnPlayButtonClicked()
     {
         SceneManager.LoadScene(playScene);
+    }
+
+    public void OnJoinButtonClicked()
+    {
+        
+    }
+
+    public void OnJoinRandomButtonClicked()
+    {
+
     }
 
     public void OnMasterVolumeSliderChanged(float value)
