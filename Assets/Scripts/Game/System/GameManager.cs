@@ -5,10 +5,13 @@ using UnityEngine;
 [RequireComponent(typeof(ScoreSystem))]
 public class GameManager : MonoBehaviour
 {
+    public static bool IsReady { get; private set; }
     public static ScoreSystem ScoreSystem { get { return scoreSystem; } }
     private static ScoreSystem scoreSystem;
     public static WaveSystem WaveSystem { get { return waveSystem; } }
     private static WaveSystem waveSystem;
+    public static PlayerSpawnSystem PlayerSpawnSystem { get { return playerSpawnSystem; } }
+    private static PlayerSpawnSystem playerSpawnSystem;
 
     private static GameManager singleton;
 
@@ -27,5 +30,8 @@ public class GameManager : MonoBehaviour
         //Initialize systems
         scoreSystem = GetComponent<ScoreSystem>();
         waveSystem = GetComponent<WaveSystem>();
+        playerSpawnSystem = GetComponent<PlayerSpawnSystem>();
+
+        IsReady = true;
     }
 }

@@ -59,11 +59,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         StartCoroutine(LoadGameAndSpawn());
     }
 
-    private void SpawnLocalPlayer(int spawnPoint)
+    private void SpawnLocalPlayer()
     {
-        Debug.LogError("Not implemented!");
-        //Transform player = PhotonNetwork.Instantiate("Player", playerSpawns[spawnPoint].position, Quaternion.identity, 0).transform;
-        //Camera.main.GetComponent<CameraFollow>().FollowTarget(player);
+        Transform spawnPoint = GameManager.PlayerSpawnSystem.GetSpawnPoint();
+        Transform player = PhotonNetwork.Instantiate("Player", spawnPoint.position, spawnPoint.rotation, 0).transform;
+        Camera.main.GetComponent<CameraFollow>().FollowTarget(player);
     }
 
     private void Connect()
@@ -83,6 +83,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         AsyncOperation load = SceneManager.LoadSceneAsync("Game");
         yield return new WaitUntil(() => load.isDone);
-        SpawnLocalPlayer(0); //TODO: Round-robin spawning
+        yield return new WaitUntil(() => GameManager.IsReady);
+        SpawnLocalPlayer(); //TODO: Lobby. Don't spawn immediately.
     }
 }
