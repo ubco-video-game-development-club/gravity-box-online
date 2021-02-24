@@ -697,7 +697,6 @@ GameObject:
   m_Component:
   - component: {fileID: 184463644}
   - component: {fileID: 184463645}
-  - component: {fileID: 184463647}
   - component: {fileID: 184463646}
   - component: {fileID: 184463648}
   m_Layer: 0
@@ -763,24 +762,6 @@ MonoBehaviour:
           m_StringArgument: Fade
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &184463647
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 184463643}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ff15fdb1cf6bb04aab759a0e5baf363, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxPlayers: 4
-  playerSpawns:
-  - {fileID: 709606963}
-  - {fileID: 428600032}
-  - {fileID: 897856906}
-  - {fileID: 2035843430}
 --- !u!82 &184463648
 AudioSource:
   m_ObjectHideFlags: 0

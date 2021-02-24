@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.Events;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
     public const string GAME_VERSION = "0.1";
 
+    public UnityEvent OnConnected { get { return onConnected; } }
+
     [SerializeField] private byte maxPlayers = 4;
-    [SerializeField] private Transform[] playerSpawns;
+    [SerializeField] private UnityEvent onConnected;
 
     void Start()
     {
@@ -26,7 +29,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        PhotonNetwork.JoinRandomRoom();
+        //PhotonNetwork.JoinRandomRoom();
+        onConnected.Invoke();
+    }
+
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        Debug.LogError($"Failed to join room: {message}::{returnCode}");
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
@@ -43,8 +52,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     private void SpawnLocalPlayer(int spawnPoint)
     {
-        Transform player = PhotonNetwork.Instantiate("Player", playerSpawns[spawnPoint].position, Quaternion.identity, 0).transform;
-        Camera.main.GetComponent<CameraFollow>().FollowTarget(player);
+        Debug.LogError("Not implemented!");
+        //Transform player = PhotonNetwork.Instantiate("Player", playerSpawns[spawnPoint].position, Quaternion.identity, 0).transform;
+        //Camera.main.GetComponent<CameraFollow>().FollowTarget(player);
     }
 
     private void Connect()
@@ -55,7 +65,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             return;
         }
 
-        PhotonNetwork.AutomaticallySyncScene = true;
+        PhotonNetwork.AutomaticallySyncScene = false; //We don't want to do this because of main menus and stuff
         PhotonNetwork.ConnectUsingSettings();
         PhotonNetwork.GameVersion = GAME_VERSION;
     }
