@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Audio;
 using Photon.Pun;
+using Photon.Realtime;
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -28,6 +29,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private Slider uiVolumeSlider;
     [SerializeField] private TMPro.TMP_InputField leaderboardNameInput;
     [SerializeField] private TMPro.TMP_InputField gameCodeInput;
+    [SerializeField] private Toggle privateGameToggle;
 
     void Start()
     {
@@ -49,6 +51,15 @@ public class MainMenuManager : MonoBehaviour
     public void OnJoinRandomButtonClicked()
     {
         PhotonNetwork.JoinRandomRoom();
+    }
+
+    public void OnCreateButtonClicked()
+    {
+        bool isPrivate = privateGameToggle.isOn;
+        RoomOptions options = new RoomOptions();
+        options.MaxPlayers = NetworkManager.MAX_PLAYERS;
+        options.IsVisible = !isPrivate;
+        PhotonNetwork.CreateRoom(NetworkManager.GenerateRoomCode(), options, TypedLobby.Default);
     }
 
     public void OnMasterVolumeSliderChanged(float value)

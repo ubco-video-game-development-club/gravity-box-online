@@ -9,11 +9,11 @@ using UnityEngine.SceneManagement;
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
     public const string GAME_VERSION = "0.1";
+    public const byte MAX_PLAYERS = 4;
 
     public UnityEvent OnConnectedEvent { get { return onConnected; } }
     public UnityEvent OnJoinRoomFailedEvent { get { return onJoinRoomFailed; } }
 
-    [SerializeField] private byte maxPlayers = 4;
     [SerializeField] private UnityEvent onConnected;
     [SerializeField] private UnityEvent onJoinRoomFailed;
 
@@ -50,8 +50,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         RoomOptions options = new RoomOptions();
-        options.MaxPlayers = maxPlayers;
-        PhotonNetwork.CreateRoom(GenerateRoomCode(), options, TypedLobby.Default); //Passing null to the name field generates a GUID for name
+        options.MaxPlayers = MAX_PLAYERS;
+        PhotonNetwork.CreateRoom(GenerateRoomCode(), options, TypedLobby.Default);
     }
 
     public override void OnJoinedRoom()
