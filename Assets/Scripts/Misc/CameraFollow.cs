@@ -21,6 +21,7 @@ public class CameraFollow : MonoBehaviour
 
     public void FollowTarget(Transform target)
     {
+        Debug.Log($"Set follow target to {target}!");
         this.target = target;
         isFollowing = true;
     }

@@ -66,6 +66,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         Transform spawnPoint = GameManager.PlayerSpawnSystem.GetSpawnPoint();
         Transform player = PhotonNetwork.Instantiate("Player", spawnPoint.position, spawnPoint.rotation, 0).transform;
+        GameManager.SpectatorSystem.SetPlayer(player.GetComponent<Player>());
         Camera.main.GetComponent<CameraFollow>().FollowTarget(player);
     }
 

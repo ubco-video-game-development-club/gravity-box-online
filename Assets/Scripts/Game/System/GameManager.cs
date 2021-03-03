@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     private static WaveSystem waveSystem;
     public static PlayerSpawnSystem PlayerSpawnSystem { get { return playerSpawnSystem; } }
     private static PlayerSpawnSystem playerSpawnSystem;
+    public static SpectatorSystem SpectatorSystem { get { return spectatorSystem; } }
+    private static SpectatorSystem spectatorSystem;
 
     public static GameManager Singleton { get { return singleton; } }
     private static GameManager singleton;
@@ -35,6 +37,7 @@ public class GameManager : MonoBehaviour
         scoreSystem = GetComponent<ScoreSystem>();
         waveSystem = GetComponent<WaveSystem>();
         playerSpawnSystem = GetComponent<PlayerSpawnSystem>();
+        spectatorSystem = GetComponent<SpectatorSystem>();
 
         IsReady = true;
     }

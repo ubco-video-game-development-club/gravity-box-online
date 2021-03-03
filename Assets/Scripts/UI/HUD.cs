@@ -33,9 +33,16 @@ public class HUD : MonoBehaviour
         hpSlider.value = percent;
     }
 
+    public void OnPlayerDie()
+    {
+        hpSlider.gameObject.SetActive(false);
+    }
+
     public void SetPlayer(Player player)
     {
         playerMaxHealth = player.MaxHealth;
+        hpSlider.gameObject.SetActive(true);
         player.AddHealthChangedListener(OnHealthChanged);
+        player.AddDeathListener(OnPlayerDie);
     }
 }
