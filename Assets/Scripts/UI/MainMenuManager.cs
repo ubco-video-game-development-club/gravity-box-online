@@ -43,7 +43,7 @@ public class MainMenuManager : MonoBehaviour
     public void OnJoinButtonClicked()
     {
         string roomName = gameCodeInput.text;
-        PhotonNetwork.JoinRoom(roomName);
+        PhotonNetwork.JoinRoom(roomName.ToUpper());
     }
 
     public void OnJoinRandomButtonClicked()
