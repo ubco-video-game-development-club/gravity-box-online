@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -70,6 +71,13 @@ public class PauseMenu : MonoBehaviour
     public void Quit()
     {
         Time.timeScale = 1.0f;
+        StartCoroutine(LeaveGame());
+    }
+
+    private IEnumerator LeaveGame()
+    {
+        PhotonNetwork.LeaveRoom();
+        yield return new WaitUntil(() => !PhotonNetwork.InRoom);
         SceneManager.LoadScene(0);
     }
 }
