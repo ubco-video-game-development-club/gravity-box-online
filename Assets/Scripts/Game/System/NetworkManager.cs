@@ -51,7 +51,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         RoomOptions options = new RoomOptions();
         options.MaxPlayers = maxPlayers;
-        PhotonNetwork.CreateRoom(null, options, TypedLobby.Default); //Passing null to the name field generates a GUID for name
+        PhotonNetwork.CreateRoom(GenerateRoomCode(), options, TypedLobby.Default); //Passing null to the name field generates a GUID for name
     }
 
     public override void OnJoinedRoom()
@@ -85,5 +85,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         yield return new WaitUntil(() => load.isDone);
         yield return new WaitUntil(() => GameManager.IsReady);
         SpawnLocalPlayer(); //TODO: Lobby. Don't spawn immediately.
+    }
+
+    public static string GenerateRoomCode() //Generates a random and (hopefully) unique 5 digit room code.
+    {
+        long t = System.DateTime.Now.Ticks % 46656; //46656 = 36^3
+        int rand = Random.Range(0, 1296); //1296 = 36^2
+        string t36 = BaseConverter.ToBase(t, 36).PadLeft(3, '0').ToUpper();
+        string rand36 = BaseConverter.ToBase(rand, 36).PadLeft(2, '0').ToUpper();
+        return t36 + rand36;
     }
 }
