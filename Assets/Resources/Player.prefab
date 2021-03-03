@@ -100,7 +100,7 @@ MonoBehaviour:
   playerBody: {fileID: 4266499463527344614}
   rocketPrefab: {fileID: 3300008257071561678, guid: 6dba117d98c766c41b2a7b154f76101d, type: 3}
   rocketCooldown: 0.5
-  recoilStrength: 3
+  recoilStrength: 6
   onShoot:
     m_PersistentCalls:
       m_Calls:
