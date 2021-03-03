@@ -13,7 +13,11 @@ public class GameManager : MonoBehaviour
     public static PlayerSpawnSystem PlayerSpawnSystem { get { return playerSpawnSystem; } }
     private static PlayerSpawnSystem playerSpawnSystem;
 
+    public static GameManager Singleton { get { return singleton; } }
     private static GameManager singleton;
+
+    public TMPro.TextMeshProUGUI CodeText { get { return codeText; } }
+    [SerializeField] private TMPro.TextMeshProUGUI codeText;
 
     void Awake() 
     {
