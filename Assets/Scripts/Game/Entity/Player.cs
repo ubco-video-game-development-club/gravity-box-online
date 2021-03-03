@@ -51,7 +51,7 @@ public class Player : MonoBehaviourPun, IPunObservable
         if(photonView.IsMine)
         {
             gameObject.layer = PLAYER_LAYER;
-            FindObjectOfType<HUD>().SetPlayer(this);
+            HUD.Singleton.SetPlayer(this);
         }
     }
 
