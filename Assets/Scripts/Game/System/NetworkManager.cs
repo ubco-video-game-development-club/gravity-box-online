@@ -84,6 +84,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         AsyncOperation load = SceneManager.LoadSceneAsync("Game");
         yield return new WaitUntil(() => load.isDone);
         yield return new WaitUntil(() => GameManager.IsReady);
+        
+        Room room = PhotonNetwork.CurrentRoom;
+        GameManager.Singleton.CodeText.SetText(room.Name);
+
         SpawnLocalPlayer(); //TODO: Lobby. Don't spawn immediately.
     }
 
