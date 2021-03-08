@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class GravityWell : MonoBehaviour
 {
+    public Vector2 Direction { get; set; }
+    public bool IsLocal { get; set; }
+
     [SerializeField] private float gravitationalAcceleration;
     [SerializeField] private float timeToLive;
+    [SerializeField] private float launchForce;
     private Rigidbody2D[] trackedBodies;
     private YieldInstruction waitForSeconds;
 
@@ -13,6 +17,11 @@ public class GravityWell : MonoBehaviour
     {
         waitForSeconds = new WaitForSeconds(1.0f);
         if(timeToLive > 0.0f) Destroy(gameObject, timeToLive);
+    }
+
+    void Start()
+    {
+        if(IsLocal) GetComponent<Rigidbody2D>().AddForce(Direction * launchForce, ForceMode2D.Impulse);
     }
 
     void OnEnable()

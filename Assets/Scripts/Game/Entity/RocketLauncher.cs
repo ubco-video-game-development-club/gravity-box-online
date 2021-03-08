@@ -7,7 +7,6 @@ using Photon.Pun;
 public class RocketLauncher : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D playerBody;
-    [SerializeField] private Rocket rocketPrefab;
     [SerializeField] private float rocketCooldown = 0.5f;
     [SerializeField] private float recoilStrength = 1;
     [SerializeField] private UnityEvent onShoot = new UnityEvent();
@@ -33,18 +32,28 @@ public class RocketLauncher : MonoBehaviour
         mouseDir = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position).normalized;
 
         // Fire rocket on click
-        if (Input.GetButton("Shoot") && canFireRocket && !PauseMenu.Singleton.IsPaused)
+        bool altFire = Input.GetButton("Alt Fire");
+        bool shootRequested = Input.GetButton("Shoot") || altFire;
+        if (shootRequested && canFireRocket && !PauseMenu.Singleton.IsPaused)
         {
             // Start rocket cooldown
             StartCoroutine(RocketCooldown());
 
             // Spawn rocket
-			Rocket rocket = PhotonNetwork.Instantiate("Rocket", transform.position, Quaternion.FromToRotation(Vector2.right, mouseDir), 0).GetComponent<Rocket>();
-            rocket.IsLocal = true;
-			rocket.Direction = mouseDir;
+            if(altFire)
+            {
+                GravityWell gravityWell = PhotonNetwork.Instantiate("GravityWell", transform.position, Quaternion.identity, 0).GetComponent<GravityWell>();
+                gravityWell.IsLocal = true;
+                gravityWell.Direction = mouseDir;
+            } else
+            {
+                Rocket rocket = PhotonNetwork.Instantiate("Rocket", transform.position, Quaternion.FromToRotation(Vector2.right, mouseDir), 0).GetComponent<Rocket>();
+                rocket.IsLocal = true;
+                rocket.Direction = mouseDir;
 
-            // Apply recoil force to player
-            playerBody.AddForce(recoilStrength * -mouseDir, ForceMode2D.Impulse);
+                 // Apply recoil force to player
+                playerBody.AddForce(recoilStrength * -mouseDir, ForceMode2D.Impulse);
+            }
 
             // Invoke onShoot event
             onShoot.Invoke();
