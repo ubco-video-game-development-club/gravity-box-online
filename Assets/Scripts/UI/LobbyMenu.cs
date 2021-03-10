@@ -14,11 +14,12 @@ public class LobbyMenu : MonoBehaviour
     [SerializeField] private float dotTime = 0.5f;
     [SerializeField] private UnityEvent onGameStart;
     private int playerCount = 0;
-    private YieldInstruction animationWait;
+    private YieldInstruction animationWait, gameStartWait;
 
     void Awake()
     {
         animationWait = new WaitForSeconds(dotTime);
+        gameStartWait = new WaitForSeconds(1.0f);
         StartCoroutine(Animate());
     }
 
@@ -33,7 +34,13 @@ public class LobbyMenu : MonoBehaviour
         playerNames[playerCount++].SetText(name);
         waitingText.SetText($"Waiting ({playerCount}/{NetworkManager.MAX_PLAYERS})");
 
-        if(playerCount == NetworkManager.MAX_PLAYERS) onGameStart.Invoke();
+        if(playerCount == NetworkManager.MAX_PLAYERS) StartCoroutine(StartGame());
+    }
+
+    private IEnumerator StartGame()
+    {
+        yield return gameStartWait;
+        onGameStart.Invoke();
     }
 
     private IEnumerator Animate()
