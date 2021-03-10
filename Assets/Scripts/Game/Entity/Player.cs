@@ -84,6 +84,7 @@ public class Player : MonoBehaviourPun, IPunObservable
         {
             enabled = false;
             onDeath.Invoke();
+            SpectatorMenu.Singleton.SetVisible(true);
             PhotonNetwork.Destroy(photonView);
         }
 

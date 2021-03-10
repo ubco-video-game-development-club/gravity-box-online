@@ -5,6 +5,18 @@ using UnityEngine.SceneManagement;
 
 public class GameOverMenu : MonoBehaviour
 {
+    public static GameOverMenu Singleton { get; private set; }
+
+    void Awake()
+    {
+        if (Singleton != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Singleton = this;
+    }
+
     public void OnPlayAgainButtonClicked()
     {
         Scene currentScene = SceneManager.GetActiveScene();
