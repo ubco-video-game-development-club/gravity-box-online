@@ -11,23 +11,17 @@ public class GravityWell : MonoBehaviour
     [SerializeField] private float timeToLive;
     [SerializeField] private float launchForce;
     private float acceleration = 0.0f;
-    private Rigidbody2D[] trackedBodies;
-    private YieldInstruction waitForSeconds;
+    private List<Rigidbody2D> trackedBodies;
 
     void Awake()
     {
-        waitForSeconds = new WaitForSeconds(1.0f);
+        trackedBodies = new List<Rigidbody2D>();
         if(timeToLive > 0.0f) Destroy(gameObject, timeToLive);
     }
 
     void Start()
     {
         if(IsLocal) GetComponent<Rigidbody2D>().AddForce(Direction * launchForce, ForceMode2D.Impulse);
-    }
-
-    void OnEnable()
-    {
-        StartCoroutine(UpdateTrackedBodies());
     }
 
     void Update()
@@ -47,12 +41,19 @@ public class GravityWell : MonoBehaviour
         }
     }
 
-    private IEnumerator UpdateTrackedBodies()
+    void OnTriggerEnter2D(Collider2D col)
     {
-        while(enabled)
+        if(col.TryGetComponent<Rigidbody2D>(out Rigidbody2D rig))
         {
-            trackedBodies = FindObjectsOfType<Rigidbody2D>();
-            yield return waitForSeconds;
+            trackedBodies.Add(rig);
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D col)
+    {
+        if(col.TryGetComponent<Rigidbody2D>(out Rigidbody2D rig))
+        {
+            trackedBodies.Remove(rig);
         }
     }
 }

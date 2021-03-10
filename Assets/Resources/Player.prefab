@@ -99,6 +99,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerBody: {fileID: 4266499463527344614}
   rocketCooldown: 0.5
+  gravityWellCooldown: 2
   recoilStrength: 6
   onShoot:
     m_PersistentCalls:
