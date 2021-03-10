@@ -38,6 +38,7 @@ public class GravityWell : MonoBehaviour
 
             float a = acceleration / ds;
             rig.AddForce(dir * a * rig.mass);
+            rig.AddForce(rig.velocity.normalized * a * rig.mass);
         }
     }
 
