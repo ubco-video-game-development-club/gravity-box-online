@@ -21,6 +21,9 @@ public class GameManager : MonoBehaviour
     public TMPro.TextMeshProUGUI CodeText { get { return codeText; } }
     [SerializeField] private TMPro.TextMeshProUGUI codeText;
 
+    public LobbyMenu LobbyMenu { get { return lobbyMenu; } }
+    [SerializeField] private LobbyMenu lobbyMenu;
+
     void Awake() 
     {
         //Enfore singleton

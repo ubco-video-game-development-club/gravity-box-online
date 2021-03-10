@@ -1,14 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using TMPro;
 
 public class LobbyMenu : MonoBehaviour
 {
+    public UnityEvent OnGameStart { get { return onGameStart; } }
+
     [SerializeField] private TextMeshProUGUI waitingText;
     [SerializeField] private TextMeshProUGUI waitingDots;
     [SerializeField] private TextMeshProUGUI[] playerNames;
     [SerializeField] private float dotTime = 0.5f;
+    [SerializeField] private UnityEvent onGameStart;
     private int playerCount = 0;
     private YieldInstruction animationWait;
 
@@ -27,6 +31,9 @@ public class LobbyMenu : MonoBehaviour
         }
 
         playerNames[playerCount++].SetText(name);
+        waitingText.SetText($"Waiting ({playerCount}/{NetworkManager.MAX_PLAYERS})");
+
+        if(playerCount == NetworkManager.MAX_PLAYERS) onGameStart.Invoke();
     }
 
     private IEnumerator Animate()
