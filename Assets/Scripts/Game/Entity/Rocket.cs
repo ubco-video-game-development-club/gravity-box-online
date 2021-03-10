@@ -12,6 +12,7 @@ public class Rocket : MonoBehaviourPun
     [SerializeField] private float explosionRadius = 1;
     [SerializeField] private float minDamage = 3.0f;
     [SerializeField] private float maxDamage = 10.0f;
+    [SerializeField] private LayerMask ignoreLayer;
 
 	public bool IsLocal { get; set; }
 
@@ -33,6 +34,11 @@ public class Rocket : MonoBehaviourPun
         rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
+    void Update()
+    {
+        transform.rotation = Quaternion.FromToRotation(Vector2.right, rigidbody2D.velocity);
+    }
+
 	[PunRPC]
 	public void Explode()
 	{
@@ -51,6 +57,7 @@ public class Rocket : MonoBehaviourPun
     void OnTriggerEnter2D(Collider2D col)
     {
 		if(!IsLocal) return;
+        if(ignoreLayer == (ignoreLayer | (1 << col.gameObject.layer))) return; //If is in ignore layers, return
 
         // Get enemy hit if we did direct hit
         Player hitPlayer;

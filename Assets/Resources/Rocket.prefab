@@ -153,6 +153,9 @@ MonoBehaviour:
   explosionRadius: 3
   minDamage: 1
   maxDamage: 10
+  ignoreLayer:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!114 &-1784399006006256557
 MonoBehaviour:
   m_ObjectHideFlags: 0
