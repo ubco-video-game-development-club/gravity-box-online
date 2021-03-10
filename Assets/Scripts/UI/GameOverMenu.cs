@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
 
 public class GameOverMenu : MonoBehaviour
 {
     public static GameOverMenu Singleton { get; private set; }
+
+    [SerializeField] private 
 
     void Awake()
     {
@@ -15,6 +18,12 @@ public class GameOverMenu : MonoBehaviour
             return;
         }
         Singleton = this;
+    }
+
+    public void EndGame()
+    {
+        Player winner = FindObjectOfType<Player>();
+        bool isWinner = winner.GetComponent<PhotonView>().IsMine;
     }
 
     public void OnPlayAgainButtonClicked()

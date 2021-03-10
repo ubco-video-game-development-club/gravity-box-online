@@ -7347,13 +7347,14 @@ GameObject:
   - component: {fileID: 1862851513}
   - component: {fileID: 1862851512}
   - component: {fileID: 1862851514}
+  - component: {fileID: 1862851515}
   m_Layer: 5
   m_Name: GameOver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1862851511
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7427,6 +7428,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d235110271270d4f9fff5c669d417cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!225 &1862851515
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862851510}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1882030447
 GameObject:
   m_ObjectHideFlags: 0
@@ -8383,7 +8396,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: You died!
+  m_text: YOU LOSE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
