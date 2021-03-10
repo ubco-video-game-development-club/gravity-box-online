@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class SpectatorSystem : MonoBehaviour
 {
-    [SerializeField] private CameraFollow camera;
+    [SerializeField] private new CameraFollow camera;
     private Player localPlayer;
 
     public void SetPlayer(Player player)
     {
-        if(localPlayer != null)
+        if (localPlayer != null)
         {
             localPlayer.RemoveDeathListener(OnPlayerDie);
         }
@@ -21,10 +21,10 @@ public class SpectatorSystem : MonoBehaviour
     private void OnPlayerDie()
     {
         Player[] players = FindObjectsOfType<Player>();
-        if(players.Length <= 1) return;
+        if (players.Length <= 1) return;
 
         Player player = players[Random.Range(0, players.Length)];
-        while(player == localPlayer) player = players[Random.Range(0, players.Length)];
+        while (player == localPlayer) player = players[Random.Range(0, players.Length)];
         SetPlayer(player);
 
         camera.FollowTarget(player.transform);
