@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
+using TMPro;
 
-public class GameOverMenu : MonoBehaviour
+public class GameOverMenu : HUDMenu
 {
     public static GameOverMenu Singleton { get; private set; }
 
-    [SerializeField] private 
+    [SerializeField] private TextMeshProUGUI headerText;
 
-    void Awake()
+    protected override void Awake()
     {
         if (Singleton != null)
         {
@@ -18,22 +19,35 @@ public class GameOverMenu : MonoBehaviour
             return;
         }
         Singleton = this;
+
+        headerText = GetComponent<TextMeshProUGUI>();
+
+        base.Awake();
     }
 
     public void EndGame()
     {
         Player winner = FindObjectOfType<Player>();
         bool isWinner = winner.GetComponent<PhotonView>().IsMine;
+        headerText.text = isWinner ? "YOU WIN" : "YOU LOSE";
     }
 
-    public void OnPlayAgainButtonClicked()
+    public void Rematch()
     {
-        Scene currentScene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(currentScene.name);
+        SetVisible(false);
+        GameManager.Singleton.LobbyMenu.SetVisible(true);
     }
 
-    public void OnQuitButtonClicked()
+    public void Quit()
     {
+        Time.timeScale = 1.0f;
+        StartCoroutine(LeaveGame());
+    }
+
+    private IEnumerator LeaveGame()
+    {
+        PhotonNetwork.LeaveRoom();
+        yield return new WaitUntil(() => !PhotonNetwork.InRoom);
         SceneManager.LoadScene(0);
     }
 }

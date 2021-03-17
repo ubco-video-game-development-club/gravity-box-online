@@ -4,13 +4,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 
-public class SpectatorMenu : MonoBehaviour
+public class SpectatorMenu : HUDMenu
 {
     public static SpectatorMenu Singleton { get; private set; }
 
-    private CanvasGroup canvasGroup;
-
-    void Awake()
+    protected override void Awake()
     {
         if (Singleton != null)
         {
@@ -19,13 +17,7 @@ public class SpectatorMenu : MonoBehaviour
         }
         Singleton = this;
 
-        canvasGroup = GetComponent<CanvasGroup>();
-    }
-
-    public void SetVisible(bool visible)
-    {
-        canvasGroup.alpha = visible ? 1 : 0;
-        canvasGroup.blocksRaycasts = visible;
+        base.Awake();
     }
 
     public void OnQuitButtonClicked()

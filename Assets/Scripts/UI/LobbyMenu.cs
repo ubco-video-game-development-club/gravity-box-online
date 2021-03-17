@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
 
-public class LobbyMenu : MonoBehaviour
+public class LobbyMenu : HUDMenu
 {
     public UnityEvent OnGameStart { get { return onGameStart; } }
 
@@ -16,15 +16,16 @@ public class LobbyMenu : MonoBehaviour
     private int playerCount = 0;
     private YieldInstruction animationWait;
 
-    void Awake()
+    protected override void Awake()
     {
         animationWait = new WaitForSeconds(dotTime);
         StartCoroutine(Animate());
+        base.Awake();
     }
 
     public void OnPlayerJoined(string name)
     {
-        if(playerCount >= playerNames.Length)
+        if (playerCount >= playerNames.Length)
         {
             Debug.LogError("Too many players for lobby menu!");
             return;
@@ -33,17 +34,17 @@ public class LobbyMenu : MonoBehaviour
         playerNames[playerCount++].SetText(name);
         waitingText.SetText($"Waiting ({playerCount}/{NetworkManager.MAX_PLAYERS})");
 
-        if(playerCount == NetworkManager.MAX_PLAYERS) onGameStart.Invoke();
+        if (playerCount == NetworkManager.MAX_PLAYERS) onGameStart.Invoke();
     }
 
     private IEnumerator Animate()
     {
         int dots = 0;
 
-        while(enabled)
+        while (enabled)
         {
             string dotStr = ".";
-            for(int i = 0; i < dots % 3; i++)
+            for (int i = 0; i < dots % 3; i++)
             {
                 dotStr += ".";
             }
@@ -51,7 +52,7 @@ public class LobbyMenu : MonoBehaviour
             dots++;
 
             waitingDots.text = dotStr;
-            for(int i = playerCount; i < playerNames.Length; i++)
+            for (int i = playerCount; i < playerNames.Length; i++)
             {
                 playerNames[i].SetText(dotStr);
             }
