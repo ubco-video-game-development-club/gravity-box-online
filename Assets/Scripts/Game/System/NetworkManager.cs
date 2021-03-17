@@ -11,6 +11,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public const string GAME_VERSION = "0.1";
     public const byte MAX_PLAYERS = 4;
 
+    public static NetworkManager Singleton { get; private set; }
+
     public UnityEvent OnConnectedEvent { get { return onConnected; } }
     public UnityEvent OnJoinRoomFailedEvent { get { return onJoinRoomFailed; } }
 
@@ -22,6 +24,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         if(FindObjectsOfType<NetworkManager>().Length == 1)
         {
             DontDestroyOnLoad(gameObject);
+            Singleton = this;
         }
     }
 
