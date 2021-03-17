@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
+using Photon.Pun;
+using Photon.Realtime;
 
 public class LobbyMenu : MonoBehaviour
 {
@@ -35,6 +37,16 @@ public class LobbyMenu : MonoBehaviour
         waitingText.SetText($"Waiting ({playerCount}/{NetworkManager.MAX_PLAYERS})");
 
         if(playerCount == NetworkManager.MAX_PLAYERS) StartCoroutine(StartGame());
+    }
+
+    public void OnPlayerLeft(string name)
+    {
+        playerCount = 0;
+        Room room = PhotonNetwork.CurrentRoom;
+        foreach(Photon.Realtime.Player player in room.Players.Values)
+        {
+            OnPlayerJoined(player.NickName);
+        }
     }
 
     private IEnumerator StartGame()

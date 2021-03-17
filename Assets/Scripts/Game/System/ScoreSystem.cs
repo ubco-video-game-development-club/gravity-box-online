@@ -17,7 +17,7 @@ public class ScoreSystem : MonoBehaviour
 
     void Awake()
     {
-        highScore = PlayerPrefs.GetInt(GetHighScorePref(Leaderboard.username));
+        highScore = PlayerPrefs.GetInt(GetHighScorePref(Leaderboard.Username));
     }
 
     public void AddScore(int amount) 
@@ -37,7 +37,7 @@ public class ScoreSystem : MonoBehaviour
             if (!achievedHighScore) onNewHighscore.Invoke();
             
             achievedHighScore = true;
-            PlayerPrefs.SetInt(GetHighScorePref(Leaderboard.username), score);
+            PlayerPrefs.SetInt(GetHighScorePref(Leaderboard.Username), score);
             highScore = score;
         }
 
@@ -46,7 +46,7 @@ public class ScoreSystem : MonoBehaviour
 
     public void SaveHighscoreToLeaderboard()
     {
-        StartCoroutine(Leaderboard.SetUserScore(Leaderboard.username, score));
+        StartCoroutine(Leaderboard.SetUserScore(Leaderboard.Username, score));
     }
 
     public void AddScoreChangedListener(UnityAction<int> call) 

@@ -63,7 +63,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         StartCoroutine(LoadGameAndSpawn());
-        photonView.RPC("PlayerJoined", RpcTarget.AllBuffered, Leaderboard.username);
+    }
+
+    public override void OnPlayerEnteredRoom(Photon.Realtime.Player player)
+    {
+        GameManager.Singleton.LobbyMenu.OnPlayerJoined(player.NickName);
+    }
+
+    public override void OnPlayerLeftRoom(Photon.Realtime.Player player)
+    {
+        GameManager.Singleton.LobbyMenu.OnPlayerLeft(player.NickName);
     }
 
     private void SpawnLocalPlayer()
@@ -101,20 +110,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         yield return new WaitUntil(() => GameManager.IsReady);
         
         Room room = PhotonNetwork.CurrentRoom;
+
+        foreach(Photon.Realtime.Player player in room.Players.Values)
+        {
+            GameManager.Singleton.LobbyMenu.OnPlayerJoined(player.NickName);
+        }
+
         GameManager.Singleton.CodeText.SetText(room.Name);
         GameManager.Singleton.LobbyMenu.OnGameStart.AddListener(SpawnLocalPlayer);
-    }
-
-    private IEnumerator AddPlayerName(string name)
-    {
-        yield return new WaitUntil(() => GameManager.IsReady);
-        GameManager.Singleton.LobbyMenu.OnPlayerJoined(name);
-    }
-
-    [PunRPC]
-    private void PlayerJoined(string name)
-    {
-        StartCoroutine(AddPlayerName(name));
     }
 
     public static string GenerateRoomCode() //Generates a random and (hopefully) unique 5 digit room code.

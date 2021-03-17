@@ -95,7 +95,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnEditLeaderboardName(string value)
     {
-        Leaderboard.username = value;
+        Leaderboard.Username = value;
         PlayerPrefs.SetString(LEADERBOARD_NAME_PREF, value);
 	}
 
@@ -104,13 +104,13 @@ public class MainMenuManager : MonoBehaviour
         string username = PlayerPrefs.GetString(LEADERBOARD_NAME_PREF);
         if(string.IsNullOrEmpty(username)) 
         {
-            Leaderboard.username = "Guest";
+            Leaderboard.Username = "Guest";
         } else 
         {
-            Leaderboard.username = username;
+            Leaderboard.Username = username;
         }
 
-        leaderboardNameInput.text = Leaderboard.username;
+        leaderboardNameInput.text = Leaderboard.Username;
     }
 
     private void SetVolumeSliders()
