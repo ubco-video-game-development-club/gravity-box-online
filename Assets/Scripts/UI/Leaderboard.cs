@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Text;
+using Photon.Pun;
 
 public class Leaderboard : MonoBehaviour
 {
@@ -42,7 +43,8 @@ public class Leaderboard : MonoBehaviour
     private const string API_KEY = "test";
     private const int NUM_ENTRIES = 10;
 
-    public static string username = "Guest";
+    public static string Username { get { return username; } set { SetUsername(value); } }
+    private static string username = "Guest";
 
     [SerializeField] private LeaderboardEntry entryPrefab;
     [SerializeField] private LeaderboardEntry personalEntry;
@@ -172,5 +174,11 @@ public class Leaderboard : MonoBehaviour
         }
 
         return uid;
+    }
+
+    private static void SetUsername(string value)
+    {
+        username = value;
+        PhotonNetwork.NickName = username;
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
+using Photon.Pun;
+using Photon.Realtime;
 
 public class LobbyMenu : HUDMenu
 {
@@ -14,11 +16,12 @@ public class LobbyMenu : HUDMenu
     [SerializeField] private float dotTime = 0.5f;
     [SerializeField] private UnityEvent onGameStart;
     private int playerCount = 0;
-    private YieldInstruction animationWait;
+    private YieldInstruction animationWait, gameStartWait;
 
     protected override void Awake()
     {
         animationWait = new WaitForSeconds(dotTime);
+        gameStartWait = new WaitForSeconds(1.0f);
         StartCoroutine(Animate());
         base.Awake();
     }
@@ -34,7 +37,23 @@ public class LobbyMenu : HUDMenu
         playerNames[playerCount++].SetText(name);
         waitingText.SetText($"Waiting ({playerCount}/{NetworkManager.MAX_PLAYERS})");
 
-        if (playerCount == NetworkManager.MAX_PLAYERS) onGameStart.Invoke();
+        if(playerCount == NetworkManager.MAX_PLAYERS) StartCoroutine(StartGame());
+    }
+
+    public void OnPlayerLeft(string name)
+    {
+        playerCount = 0;
+        Room room = PhotonNetwork.CurrentRoom;
+        foreach(Photon.Realtime.Player player in room.Players.Values)
+        {
+            OnPlayerJoined(player.NickName);
+        }
+    }
+
+    private IEnumerator StartGame()
+    {
+        yield return gameStartWait;
+        onGameStart.Invoke();
     }
 
     private IEnumerator Animate()

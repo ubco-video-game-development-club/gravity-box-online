@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System;
 
 public class PlayerSpawnSystem : MonoBehaviour
 {
@@ -9,7 +10,8 @@ public class PlayerSpawnSystem : MonoBehaviour
 
     public Transform GetSpawnPoint()
     {
-        int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
-        return spawnPoints[playerCount - 1];
+        Photon.Realtime.Player[] players = PhotonNetwork.PlayerList;
+        int idx = Array.IndexOf(players, PhotonNetwork.LocalPlayer);
+        return spawnPoints[idx];
     }
 }

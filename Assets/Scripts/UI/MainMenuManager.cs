@@ -30,6 +30,12 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private TMPro.TMP_InputField leaderboardNameInput;
     [SerializeField] private TMPro.TMP_InputField gameCodeInput;
     [SerializeField] private Toggle privateGameToggle;
+    private YieldInstruction waitForEndOfFrame;
+
+    void Awake()
+    {
+        waitForEndOfFrame = new WaitForEndOfFrame();
+    }
 
     void Start()
     {
@@ -45,7 +51,8 @@ public class MainMenuManager : MonoBehaviour
     public void OnJoinButtonClicked()
     {
         string roomName = gameCodeInput.text;
-        PhotonNetwork.JoinRoom(roomName.ToUpper());
+        if(roomName.Trim().Length == 0) StartCoroutine(CancelJoin());
+        else PhotonNetwork.JoinRoom(roomName.ToUpper());
     }
 
     public void OnJoinRandomButtonClicked()
@@ -88,7 +95,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnEditLeaderboardName(string value)
     {
-        Leaderboard.username = value;
+        Leaderboard.Username = value;
         PlayerPrefs.SetString(LEADERBOARD_NAME_PREF, value);
 	}
 
@@ -97,13 +104,13 @@ public class MainMenuManager : MonoBehaviour
         string username = PlayerPrefs.GetString(LEADERBOARD_NAME_PREF);
         if(string.IsNullOrEmpty(username)) 
         {
-            Leaderboard.username = "Guest";
+            Leaderboard.Username = "Guest";
         } else 
         {
-            Leaderboard.username = username;
+            Leaderboard.Username = username;
         }
 
-        leaderboardNameInput.text = Leaderboard.username;
+        leaderboardNameInput.text = Leaderboard.Username;
     }
 
     private void SetVolumeSliders()
@@ -123,5 +130,11 @@ public class MainMenuManager : MonoBehaviour
         float uiVolume = PlayerPrefs.GetFloat(UI_VOL_PREF);
         uiVolumeSlider.value = uiVolume;
         masterMixer.SetFloat(UI_MIX_VOL, uiVolume);
+    }
+
+    private IEnumerator CancelJoin()
+    {
+        yield return waitForEndOfFrame;
+        NetworkManager.Singleton.OnJoinRoomFailedEvent.Invoke();
     }
 }
