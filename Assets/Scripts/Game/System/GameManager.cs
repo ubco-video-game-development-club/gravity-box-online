@@ -18,13 +18,15 @@ public class GameManager : MonoBehaviour
     public static GameManager Singleton { get { return singleton; } }
     private static GameManager singleton;
 
+    public static bool IsMenuActive { get; set; } = false;
+
     public TMPro.TextMeshProUGUI CodeText { get { return codeText; } }
     [SerializeField] private TMPro.TextMeshProUGUI codeText;
 
     public LobbyMenu LobbyMenu { get { return lobbyMenu; } }
     [SerializeField] private LobbyMenu lobbyMenu;
 
-    void Awake() 
+    void Awake()
     {
         //Enfore singleton
         if(singleton != null) 

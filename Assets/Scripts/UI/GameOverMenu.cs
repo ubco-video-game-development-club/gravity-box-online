@@ -30,18 +30,19 @@ public class GameOverMenu : HUDMenu
         headerText.text = isWinner ? "YOU WIN" : "YOU LOSE";
         SpectatorMenu.Singleton.SetVisible(false);
         SetVisible(true);
+        GameManager.IsMenuActive = true;
     }
 
     public void Rematch()
     {
         SetVisible(false);
+        GameManager.IsMenuActive = false;
         GameManager.Singleton.LobbyMenu.SetVisible(true);
         GameManager.Singleton.LobbyMenu.OnOpen();
     }
 
     public void Quit()
     {
-        Time.timeScale = 1.0f;
         StartCoroutine(LeaveGame());
     }
 
