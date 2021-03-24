@@ -41,6 +41,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
     }
 
+    [PunRPC]
     public void ForceStartGame() => GameManager.Singleton.LobbyMenu.OnGameStart.Invoke();
 
     public override void OnConnectedToMaster()
