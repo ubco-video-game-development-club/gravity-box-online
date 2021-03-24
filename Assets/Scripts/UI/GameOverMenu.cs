@@ -20,8 +20,6 @@ public class GameOverMenu : HUDMenu
         }
         Singleton = this;
 
-        headerText = GetComponent<TextMeshProUGUI>();
-
         base.Awake();
     }
 
