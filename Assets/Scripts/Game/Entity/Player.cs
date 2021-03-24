@@ -148,6 +148,7 @@ public class Player : MonoBehaviourPun, IPunObservable
         if (players.Length == 1)
         {
             GameOverMenu.Singleton.EndGame();
+            if (players[0].photonView.IsMine) PhotonNetwork.Destroy(photonView);
         }
     }
 
