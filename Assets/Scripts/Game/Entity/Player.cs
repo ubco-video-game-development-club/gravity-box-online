@@ -47,6 +47,8 @@ public class Player : MonoBehaviourPun, IPunObservable
 
     void Start()
     {
+        onHealthChanged.Invoke(currentHealth);
+
         rocketLauncher.enabled = photonView.IsMine;
         if (photonView.IsMine)
         {
