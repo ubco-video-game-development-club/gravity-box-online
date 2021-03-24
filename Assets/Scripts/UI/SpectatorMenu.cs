@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 
 public class SpectatorMenu : HUDMenu
 {
     public static SpectatorMenu Singleton { get; private set; }
+
+    [SerializeField] private Text testText;
 
     protected override void Awake()
     {
@@ -18,6 +21,11 @@ public class SpectatorMenu : HUDMenu
         Singleton = this;
 
         base.Awake();
+    }
+
+    public void SetTestText(string text)
+    {
+        testText.text = text;
     }
 
     public void OnQuitButtonClicked()

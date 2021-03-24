@@ -22,16 +22,9 @@ public class SpectatorSystem : MonoBehaviour
 
     private void OnPlayerDie()
     {
-        if (isGameOver) return;
+        SpectatorMenu.Singleton.SetVisible(true);
 
         Player[] players = FindObjectsOfType<Player>();
-        if (players.Length <= 1)
-        {
-            isGameOver = true;
-            GameOverMenu.Singleton.EndGame();
-            return;
-        }
-
         Player player = players[Random.Range(0, players.Length)];
         while (player == localPlayer) player = players[Random.Range(0, players.Length)];
         SetPlayer(player);

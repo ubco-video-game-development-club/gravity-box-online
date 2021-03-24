@@ -30,6 +30,8 @@ public class GameOverMenu : HUDMenu
         Player winner = FindObjectOfType<Player>();
         bool isWinner = winner.GetComponent<PhotonView>().IsMine;
         headerText.text = isWinner ? "YOU WIN" : "YOU LOSE";
+        SpectatorMenu.Singleton.SetVisible(false);
+        SetVisible(true);
     }
 
     public void Rematch()

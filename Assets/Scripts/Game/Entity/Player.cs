@@ -48,7 +48,7 @@ public class Player : MonoBehaviourPun, IPunObservable
     void Start()
     {
         rocketLauncher.enabled = photonView.IsMine;
-        if(photonView.IsMine)
+        if (photonView.IsMine)
         {
             gameObject.layer = PLAYER_LAYER;
             HUD.Singleton.SetPlayer(this);
@@ -59,7 +59,7 @@ public class Player : MonoBehaviourPun, IPunObservable
     {
         if (photonView.IsMine) return;
         rigidbody2D.position = Vector2.MoveTowards(rigidbody2D.position, realPosition, lagDistance * (1.0f / PhotonNetwork.SerializationRate));
-        
+
         angleSlerp += 1.0f / PhotonNetwork.SerializationRate;
         rocketLauncher.transform.rotation = Quaternion.Slerp(rocketLauncher.transform.rotation, Quaternion.Euler(0, 0, realRotation), angleSlerp);
     }
@@ -84,7 +84,6 @@ public class Player : MonoBehaviourPun, IPunObservable
         {
             enabled = false;
             onDeath.Invoke();
-            SpectatorMenu.Singleton.SetVisible(true);
             PhotonNetwork.Destroy(photonView);
         }
 
@@ -110,7 +109,7 @@ public class Player : MonoBehaviourPun, IPunObservable
 
     private void OnActiveSceneChanged(Scene current, Scene next)
     {
-        if(next.name != "Game") //If we're not loading the game scene,
+        if (next.name != "Game") //If we're not loading the game scene,
         {
             //Destroy
             Destroy(gameObject);
@@ -140,6 +139,15 @@ public class Player : MonoBehaviourPun, IPunObservable
         foreach (SpriteRenderer r in flickerRenderers)
         {
             r.enabled = true;
+        }
+    }
+
+    void OnDestroy()
+    {
+        Player[] players = FindObjectsOfType<Player>();
+        if (players.Length == 1)
+        {
+            GameOverMenu.Singleton.EndGame();
         }
     }
 
