@@ -41,6 +41,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public void ForceStartGame() => GameManager.Singleton.LobbyMenu.OnGameStart.Invoke();
+
     public override void OnConnectedToMaster()
     {
         //PhotonNetwork.JoinRandomRoom();

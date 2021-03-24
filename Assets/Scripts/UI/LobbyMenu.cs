@@ -27,7 +27,7 @@ public class LobbyMenu : HUDMenu
         base.Awake();
     }
 
-    void Start()
+    void OnEnable()
     {
         forceStartButton.SetActive(PhotonNetwork.IsMasterClient);
     }
@@ -56,7 +56,11 @@ public class LobbyMenu : HUDMenu
         }
     }
 
-    public void OnStartNowClicked() => onGameStart.Invoke();
+    public void OnStartNowClicked() 
+    {
+        NetworkManager netManager = NetworkManager.Singleton;
+        netManager.photonView.RPC("ForceStartGame", RpcTarget.All);
+    }
 
     private IEnumerator StartGame()
     {
