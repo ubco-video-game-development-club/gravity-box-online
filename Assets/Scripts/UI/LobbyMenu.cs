@@ -49,6 +49,8 @@ public class LobbyMenu : MonoBehaviour
         }
     }
 
+    public void OnStartNowClicked() => onGameStart.Invoke();
+
     private IEnumerator StartGame()
     {
         yield return gameStartWait;
