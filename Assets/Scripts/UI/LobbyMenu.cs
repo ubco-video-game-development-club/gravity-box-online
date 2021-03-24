@@ -12,6 +12,7 @@ public class LobbyMenu : HUDMenu
 
     [SerializeField] private TextMeshProUGUI waitingText;
     [SerializeField] private TextMeshProUGUI waitingDots;
+    [SerializeField] private GameObject forceStartButton;
     [SerializeField] private TextMeshProUGUI[] playerNames;
     [SerializeField] private float dotTime = 0.5f;
     [SerializeField] private UnityEvent onGameStart;
@@ -24,6 +25,11 @@ public class LobbyMenu : HUDMenu
         gameStartWait = new WaitForSeconds(1.0f);
         StartCoroutine(Animate());
         base.Awake();
+    }
+
+    void Start()
+    {
+        forceStartButton.SetActive(PhotonNetwork.IsMasterClient);
     }
 
     public void OnPlayerJoined(string name)
