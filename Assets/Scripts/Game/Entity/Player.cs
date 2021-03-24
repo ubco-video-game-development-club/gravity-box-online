@@ -47,14 +47,14 @@ public class Player : MonoBehaviourPun, IPunObservable
 
     void Start()
     {
-        onHealthChanged.Invoke(currentHealth);
-
         rocketLauncher.enabled = photonView.IsMine;
         if (photonView.IsMine)
         {
             gameObject.layer = PLAYER_LAYER;
             HUD.Singleton.SetPlayer(this);
         }
+
+        onHealthChanged.Invoke(currentHealth);
     }
 
     void FixedUpdate()
