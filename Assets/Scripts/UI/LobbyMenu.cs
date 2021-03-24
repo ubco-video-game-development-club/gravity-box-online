@@ -66,6 +66,7 @@ public class LobbyMenu : HUDMenu
 
     private IEnumerator StartGame()
     {
+        if(PhotonNetwork.IsMasterClient) PhotonNetwork.CurrentRoom.IsOpen = false;
         yield return gameStartWait;
         onGameStart.Invoke();
     }

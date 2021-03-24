@@ -42,7 +42,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void ForceStartGame() => GameManager.Singleton.LobbyMenu.OnGameStart.Invoke();
+    public void ForceStartGame()
+    {
+        if(PhotonNetwork.IsMasterClient) PhotonNetwork.CurrentRoom.IsOpen = false;
+        GameManager.Singleton.LobbyMenu.OnGameStart.Invoke();
+    }
 
     public override void OnConnectedToMaster()
     {
