@@ -6403,6 +6403,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waitingText: {fileID: 2082793193}
   waitingDots: {fileID: 1034151678}
+  forceStartButton: {fileID: 6423991895930390769}
   playerNames:
   - {fileID: 1560014056}
   - {fileID: 1030695371}
