@@ -36,6 +36,7 @@ public class GameOverMenu : HUDMenu
     {
         SetVisible(false);
         GameManager.Singleton.LobbyMenu.SetVisible(true);
+        GameManager.Singleton.LobbyMenu.OnOpen();
     }
 
     public void Quit()

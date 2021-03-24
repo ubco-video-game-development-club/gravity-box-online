@@ -25,9 +25,10 @@ public class LobbyMenu : HUDMenu
         gameStartWait = new WaitForSeconds(1.0f);
         StartCoroutine(Animate());
         base.Awake();
+        OnOpen();
     }
 
-    void OnEnable()
+    public void OnOpen()
     {
         forceStartButton.SetActive(PhotonNetwork.IsMasterClient);
         if(PhotonNetwork.IsMasterClient) PhotonNetwork.CurrentRoom.IsOpen = true;
