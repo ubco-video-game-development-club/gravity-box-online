@@ -54,6 +54,8 @@ public class LobbyMenu : HUDMenu
         {
             OnPlayerJoined(player.NickName);
         }
+
+        forceStartButton.SetActive(PhotonNetwork.IsMasterClient);
     }
 
     public void OnStartNowClicked() 
