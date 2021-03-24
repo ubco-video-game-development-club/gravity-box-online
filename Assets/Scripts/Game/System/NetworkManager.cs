@@ -21,11 +21,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     void Awake()
     {
-        if(FindObjectsOfType<NetworkManager>().Length == 1)
-        {
-            DontDestroyOnLoad(gameObject);
-            Singleton = this;
-        }
+        DontDestroyOnLoad(gameObject);
+        Singleton = this;
     }
 
     void Start()
@@ -94,14 +91,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsConnected)
         {
-            //Okay so this is a bit of a weird one.
-            //If Connect gets called and we are already
-            //connected, this means that there is already
-            //another NetworkManager that is persistant
-            //through scenes. Thus, we should invoke
-            //onConnected and then destroy ourselves.
             onConnected.Invoke();
-            Destroy(gameObject);
             return;
         }
 

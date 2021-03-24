@@ -30,6 +30,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private TMPro.TMP_InputField leaderboardNameInput;
     [SerializeField] private TMPro.TMP_InputField gameCodeInput;
     [SerializeField] private Toggle privateGameToggle;
+    [SerializeField] private NetworkManager networkManager;
     private YieldInstruction waitForEndOfFrame;
 
     void Awake()
@@ -39,6 +40,10 @@ public class MainMenuManager : MonoBehaviour
 
     void Start()
     {
+        NetworkManager netManager = FindObjectOfType<NetworkManager>();
+        if(netManager == null) networkManager.gameObject.SetActive(true);
+        else networkManager.OnConnectedEvent.Invoke();
+
         SetVolumeSliders();
         SetLeaderboardName();
     }
