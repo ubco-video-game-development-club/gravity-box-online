@@ -30,6 +30,7 @@ public class LobbyMenu : HUDMenu
     void OnEnable()
     {
         forceStartButton.SetActive(PhotonNetwork.IsMasterClient);
+        if(PhotonNetwork.IsMasterClient) PhotonNetwork.CurrentRoom.IsOpen = true;
     }
 
     public void OnPlayerJoined(string name)
