@@ -1514,7 +1514,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &448358578
 Transform:
   m_ObjectHideFlags: 0
@@ -3885,6 +3885,7 @@ MonoBehaviour:
   leaderboardNameInput: {fileID: 2100212820}
   gameCodeInput: {fileID: 1643313339}
   privateGameToggle: {fileID: 1696538354}
+  networkManager: {fileID: 448358579}
 --- !u!1 &1222921112
 GameObject:
   m_ObjectHideFlags: 0

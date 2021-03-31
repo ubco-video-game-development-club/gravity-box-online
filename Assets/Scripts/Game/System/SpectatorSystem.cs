@@ -7,6 +7,8 @@ public class SpectatorSystem : MonoBehaviour
     [SerializeField] private new CameraFollow camera;
     private Player localPlayer;
 
+    private bool isGameOver = false;
+
     public void SetPlayer(Player player)
     {
         if (localPlayer != null)
@@ -20,9 +22,9 @@ public class SpectatorSystem : MonoBehaviour
 
     private void OnPlayerDie()
     {
-        Player[] players = FindObjectsOfType<Player>();
-        if (players.Length <= 1) return;
+        SpectatorMenu.Singleton.SetVisible(true);
 
+        Player[] players = FindObjectsOfType<Player>();
         Player player = players[Random.Range(0, players.Length)];
         while (player == localPlayer) player = players[Random.Range(0, players.Length)];
         SetPlayer(player);

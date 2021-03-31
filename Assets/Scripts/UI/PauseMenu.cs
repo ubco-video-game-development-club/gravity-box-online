@@ -17,9 +17,10 @@ public class PauseMenu : MonoBehaviour
 
         private set
         {
+            if(GameManager.IsMenuActive && value) return;
             m_isPaused = value;
             panel.SetActive(value);
-            Time.timeScale = value ? 0.0f : 1.0f; //Set time scale to zero if the game is paused; otherwise 1
+            GameManager.IsMenuActive = value;
         }
     }
 
@@ -70,7 +71,6 @@ public class PauseMenu : MonoBehaviour
 
     public void Quit()
     {
-        Time.timeScale = 1.0f;
         StartCoroutine(LeaveGame());
     }
 

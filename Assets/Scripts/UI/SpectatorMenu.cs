@@ -1,16 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 
-public class SpectatorMenu : MonoBehaviour
+public class SpectatorMenu : HUDMenu
 {
     public static SpectatorMenu Singleton { get; private set; }
 
-    private CanvasGroup canvasGroup;
+    [SerializeField] private Text testText;
 
-    void Awake()
+    protected override void Awake()
     {
         if (Singleton != null)
         {
@@ -19,13 +20,12 @@ public class SpectatorMenu : MonoBehaviour
         }
         Singleton = this;
 
-        canvasGroup = GetComponent<CanvasGroup>();
+        base.Awake();
     }
 
-    public void SetVisible(bool visible)
+    public void SetTestText(string text)
     {
-        canvasGroup.alpha = visible ? 1 : 0;
-        canvasGroup.blocksRaycasts = visible;
+        testText.text = text;
     }
 
     public void OnQuitButtonClicked()
