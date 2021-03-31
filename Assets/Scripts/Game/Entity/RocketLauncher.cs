@@ -16,7 +16,7 @@ public class RocketLauncher : MonoBehaviour
     private bool canFireGravityWell = true;
     private Vector2 mouseDir = Vector2.right;
 
-    private new Transform transform; 
+    private new Transform transform;
     private YieldInstruction rocketCooldownInstruction;
     private YieldInstruction gravityWellCooldownInstruction;
 
@@ -46,12 +46,13 @@ public class RocketLauncher : MonoBehaviour
             rocket.IsLocal = true;
             rocket.Direction = mouseDir;
 
-             // Apply recoil force to player
+            // Apply recoil force to player
             playerBody.AddForce(recoilStrength * -mouseDir, ForceMode2D.Impulse);
 
             // Invoke onShoot event
             onShoot.Invoke();
-        } else if(Input.GetButton("Alt Fire") && canFireGravityWell && !PauseMenu.Singleton.IsPaused)
+        }
+        else if (Input.GetButton("Alt Fire") && canFireGravityWell && !PauseMenu.Singleton.IsPaused)
         {
             StartCoroutine(GravityWellCooldown());
 
@@ -60,6 +61,7 @@ public class RocketLauncher : MonoBehaviour
             gravityWell.Direction = mouseDir;
 
             onShoot.Invoke();
+            HUD.Singleton.StartGravityWellCooldown(gravityWellCooldown);
         }
     }
 
