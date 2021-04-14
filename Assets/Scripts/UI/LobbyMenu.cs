@@ -30,6 +30,7 @@ public class LobbyMenu : HUDMenu
 
     public void OnOpen()
     {
+        playerCount = 0;
         GameManager.IsMenuActive = true;
         forceStartButton.SetActive(PhotonNetwork.IsMasterClient);
         if(PhotonNetwork.IsMasterClient) PhotonNetwork.CurrentRoom.IsOpen = true;
@@ -63,7 +64,6 @@ public class LobbyMenu : HUDMenu
 
     public void OnStartNowClicked() 
     {
-        playerCount = 0;
         NetworkManager netManager = NetworkManager.Singleton;
         netManager.photonView.RPC("ForceStartGame", RpcTarget.All);
         GameManager.IsMenuActive = false;
@@ -83,7 +83,6 @@ public class LobbyMenu : HUDMenu
         if(PhotonNetwork.IsMasterClient) PhotonNetwork.CurrentRoom.IsOpen = false;
         yield return gameStartWait;
         GameManager.IsMenuActive = false;
-        playerCount = 0;
         onGameStart.Invoke();
     }
 
