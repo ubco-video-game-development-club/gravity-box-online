@@ -36,6 +36,7 @@ public class GameOverMenu : HUDMenu
     public void Rematch()
     {
         SetVisible(false);
+        NetworkManager.Singleton.photonView.RPC("OnPlayerRematch", RpcTarget.All, Leaderboard.Username);
         GameManager.IsMenuActive = false;
         GameManager.Singleton.LobbyMenu.SetVisible(true);
         GameManager.Singleton.LobbyMenu.OnOpen();

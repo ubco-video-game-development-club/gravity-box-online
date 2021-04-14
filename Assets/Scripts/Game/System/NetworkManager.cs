@@ -45,6 +45,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         GameManager.Singleton.LobbyMenu.OnGameStart.Invoke();
     }
 
+    [PunRPC]
+    public void OnPlayerRematch(string username)
+    {
+        GameManager.Singleton.LobbyMenu.OnPlayerJoined(username);
+    }
+
     public override void OnConnectedToMaster()
     {
         //PhotonNetwork.JoinRandomRoom();
