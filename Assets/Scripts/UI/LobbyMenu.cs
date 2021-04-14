@@ -30,7 +30,6 @@ public class LobbyMenu : HUDMenu
 
     public void OnOpen()
     {
-        playerCount = 0;
         GameManager.IsMenuActive = true;
         forceStartButton.SetActive(PhotonNetwork.IsMasterClient);
         if(PhotonNetwork.IsMasterClient) PhotonNetwork.CurrentRoom.IsOpen = true;
@@ -71,6 +70,8 @@ public class LobbyMenu : HUDMenu
 
     public void OnLeaveClicked() => StartCoroutine(LeaveGame());
 
+    public void ClearPlayers() => playerCount = 0;
+
     private IEnumerator LeaveGame()
     {
         PhotonNetwork.LeaveRoom();
@@ -83,6 +84,7 @@ public class LobbyMenu : HUDMenu
         if(PhotonNetwork.IsMasterClient) PhotonNetwork.CurrentRoom.IsOpen = false;
         yield return gameStartWait;
         GameManager.IsMenuActive = false;
+        ClearPlayers();
         onGameStart.Invoke();
     }
 

@@ -47,6 +47,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         else StartCoroutine(LeaveGame());
 
         GameManager.Singleton.LobbyMenu.OnGameStart.Invoke();
+        GameManager.Singleton.LobbyMenu.ClearPlayers();
     }
 
     [PunRPC]
