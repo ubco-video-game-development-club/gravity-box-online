@@ -42,7 +42,17 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void ForceStartGame()
     {
         if(PhotonNetwork.IsMasterClient) PhotonNetwork.CurrentRoom.IsOpen = false;
+
+        if(GameOverMenu.Singleton.IsPlayerReady) GameOverMenu.Singleton.IsPlayerReady = false;
+        else StartCoroutine(LeaveGame());
+
         GameManager.Singleton.LobbyMenu.OnGameStart.Invoke();
+    }
+
+    [PunRPC]
+    public void OnPlayerRematch(string username)
+    {
+        GameManager.Singleton.LobbyMenu.OnPlayerJoined(username);
     }
 
     public override void OnConnectedToMaster()
@@ -77,6 +87,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Photon.Realtime.Player player)
     {
         GameManager.Singleton.LobbyMenu.OnPlayerLeft(player.NickName);
+    }
+
+    private IEnumerator LeaveGame()
+    {
+        PhotonNetwork.LeaveRoom();
+        yield return new WaitUntil(() => !PhotonNetwork.InRoom);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
 
     private void SpawnLocalPlayer()
