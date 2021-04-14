@@ -9,7 +9,7 @@ public class GameOverMenu : HUDMenu
 {
     public static GameOverMenu Singleton { get; private set; }
 
-    public bool IsPlayerReady {get; set; }
+    public bool IsPlayerReady { get; set; }
     [SerializeField] private TextMeshProUGUI headerText;
 
     protected override void Awake()
@@ -20,6 +20,7 @@ public class GameOverMenu : HUDMenu
             return;
         }
         Singleton = this;
+        IsPlayerReady = true;
 
         base.Awake();
     }
