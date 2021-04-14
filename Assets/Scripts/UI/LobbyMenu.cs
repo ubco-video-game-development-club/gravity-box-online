@@ -68,6 +68,15 @@ public class LobbyMenu : HUDMenu
         GameManager.IsMenuActive = false;
     }
 
+    public void OnLeaveClicked() => StartCoroutine(LeaveGame());
+
+    private IEnumerator LeaveGame()
+    {
+        PhotonNetwork.LeaveRoom();
+        yield return new WaitUntil(() => !PhotonNetwork.InRoom);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+    }
+
     private IEnumerator StartGame()
     {
         if(PhotonNetwork.IsMasterClient) PhotonNetwork.CurrentRoom.IsOpen = false;
