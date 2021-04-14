@@ -9,6 +9,7 @@ public class GameOverMenu : HUDMenu
 {
     public static GameOverMenu Singleton { get; private set; }
 
+    public bool IsPlayerReady {get; set; }
     [SerializeField] private TextMeshProUGUI headerText;
 
     protected override void Awake()
@@ -35,6 +36,7 @@ public class GameOverMenu : HUDMenu
 
     public void Rematch()
     {
+        IsPlayerReady = true;
         SetVisible(false);
         NetworkManager.Singleton.photonView.RPC("OnPlayerRematch", RpcTarget.All, Leaderboard.Username);
         GameManager.IsMenuActive = false;
